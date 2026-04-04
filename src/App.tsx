@@ -16,7 +16,7 @@ const AppContent: React.FC = () => {
       <main className="main-content">
         {currentTab === 'dashboard' && <Dashboard />}
         {currentTab === 'transactions' && <Transactions />}
-        {currentTab === 'insights' && <Insights />}
+        {currentTab === 'analytics' && <Insights />}
       </main>
     </div>
   );

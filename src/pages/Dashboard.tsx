@@ -5,9 +5,8 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { format, parseISO, isAfter, subWeeks, subMonths, subYears } from 'date-fns';
-import { SmartInsights } from '../components/SmartInsights';
-import { HealthScore } from '../components/HealthScore';
 import { InsightsPanel } from '../components/InsightsPanel';
+import type { Transaction } from '../types';
 
 // ✅ Strict type
 type TrendItem = {
@@ -17,10 +16,41 @@ type TrendItem = {
   originalDate: string;
 };
 
-// ✅ Pie data type
 type CategoryItem = {
   name: string;
   value: number;
+};
+
+// ✅ Proper tooltip typing
+const CustomPieTooltip = ({
+  active,
+  payload,
+  filteredTransactions
+}: {
+  active?: boolean;
+  payload?: any;
+  filteredTransactions: Transaction[];
+}) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const count = filteredTransactions.filter((t: Transaction) => t.category === data.name).length;
+
+    return (
+      <div style={{
+        backgroundColor: 'var(--bg-card)',
+        padding: '1rem',
+        border: '1px solid var(--border-color)',
+        borderRadius: '8px'
+      }}>
+        <p style={{ margin: 0, fontWeight: 600 }}>{data.name}</p>
+        <p style={{ margin: 0 }}>₹{data.value.toLocaleString('en-IN')}</p>
+        <small style={{ color: 'var(--primary)' }}>
+          Click to view {count} transactions →
+        </small>
+      </div>
+    );
+  }
+  return null;
 };
 
 export const Dashboard: React.FC = () => {
@@ -38,19 +68,19 @@ export const Dashboard: React.FC = () => {
         ? subMonths(now, 1)
         : subYears(now, 1);
 
-    return transactions.filter((t) => isAfter(parseISO(t.date), threshold));
+    return transactions.filter((t: Transaction) => isAfter(parseISO(t.date), threshold));
   }, [transactions, timeFrame]);
 
   // ✅ Totals
   const totalIncome = useMemo(
-    () => filteredTransactions.filter(t => t.type === 'income')
-      .reduce((a, c) => a + c.amount, 0),
+    () => filteredTransactions.filter((t: Transaction) => t.type === 'income')
+      .reduce((a: number, c: Transaction) => a + c.amount, 0),
     [filteredTransactions]
   );
 
   const totalExpense = useMemo(
-    () => filteredTransactions.filter(t => t.type === 'expense')
-      .reduce((a, c) => a + c.amount, 0),
+    () => filteredTransactions.filter((t: Transaction) => t.type === 'expense')
+      .reduce((a: number, c: Transaction) => a + c.amount, 0),
     [filteredTransactions]
   );
 
@@ -58,7 +88,7 @@ export const Dashboard: React.FC = () => {
 
   // ✅ Trend Data
   const trendData = useMemo(() => {
-    const grouped = filteredTransactions.reduce<Record<string, TrendItem>>((acc, t) => {
+    const grouped = filteredTransactions.reduce<Record<string, TrendItem>>((acc: Record<string, TrendItem>, t: Transaction) => {
       const formatStr = timeFrame === 'yearly' ? 'MMM yyyy' : 'MMM dd';
       const dateStr = format(parseISO(t.date), formatStr);
 
@@ -76,7 +106,7 @@ export const Dashboard: React.FC = () => {
     }, {});
 
     return Object.values(grouped).sort(
-      (a, b) => new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
+      (a: TrendItem, b: TrendItem) => new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
     );
   }, [filteredTransactions, timeFrame]);
 
@@ -84,7 +114,7 @@ export const Dashboard: React.FC = () => {
   const categoryData: CategoryItem[] = useMemo(() => {
     const grouped: Record<string, number> = {};
 
-    filteredTransactions.forEach((t) => {
+    filteredTransactions.forEach((t: Transaction) => {
       if (t.type === 'expense') {
         grouped[t.category] = (grouped[t.category] || 0) + t.amount;
       }
@@ -96,36 +126,6 @@ export const Dashboard: React.FC = () => {
   }, [filteredTransactions]);
 
   const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
-
-  // ✅ Proper tooltip typing
-  const CustomPieTooltip = ({
-    active,
-    payload
-  }: {
-    active?: boolean;
-    payload?: { payload: CategoryItem }[];
-  }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      const count = filteredTransactions.filter(t => t.category === data.name).length;
-
-      return (
-        <div style={{
-          backgroundColor: 'var(--bg-card)',
-          padding: '1rem',
-          border: '1px solid var(--border-color)',
-          borderRadius: '8px'
-        }}>
-          <p style={{ margin: 0, fontWeight: 600 }}>{data.name}</p>
-          <p style={{ margin: 0 }}>₹{data.value.toLocaleString('en-IN')}</p>
-          <small style={{ color: 'var(--primary)' }}>
-            Click to view {count} transactions →
-          </small>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="animate-in">
@@ -176,8 +176,9 @@ export const Dashboard: React.FC = () => {
                 dataKey="value"
                 innerRadius={60}
                 outerRadius={80}
-                onClick={(data: CategoryItem) => {
-                  setSearchTerm(data?.name ?? '');
+                onClick={(data: any) => {
+                  const item = data as CategoryItem;
+                  setSearchTerm(item.name);
                   setCurrentTab('transactions');
                 }}
               >
@@ -186,7 +187,7 @@ export const Dashboard: React.FC = () => {
                 ))}
               </Pie>
 
-              <Tooltip content={<CustomPieTooltip />} />
+              <Tooltip content={(props) => <CustomPieTooltip {...props} filteredTransactions={filteredTransactions} />} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>

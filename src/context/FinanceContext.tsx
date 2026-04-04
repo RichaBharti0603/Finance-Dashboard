@@ -1,31 +1,29 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import type { Transaction, Role, Theme, Tab } from '../types';
 
-type FinanceContextValue = {
+export type FinanceContextValue = {
   transactions: Transaction[];
   addTransaction: (t: Omit<Transaction, 'id'>) => void;
   updateTransaction: (id: string, updated: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;
+
   currentRole: Role;
   setRole: React.Dispatch<React.SetStateAction<Role>>;
+
   theme: Theme;
   toggleTheme: () => void;
+
   currentTab: Tab;
   setCurrentTab: React.Dispatch<React.SetStateAction<Tab>>;
+
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
 };
 
+// ✅ SINGLE context (typed)
 export const FinanceContext = createContext<FinanceContextValue | undefined>(undefined);
-const FinanceContext = createContext<any>(null);
-export const useFinance = () => {
-  const context = React.useContext(FinanceContext);
-  if (!context) {
-    throw new Error('useFinance must be used within FinanceProvider');
-  }
-  return context;
-};
 
+// ✅ Provider
 export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentRole, setCurrentRole] = useState<Role>('admin');
@@ -43,12 +41,12 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateTransaction = (id: string, updated: Partial<Transaction>) => {
     setTransactions(prev =>
-      prev.map(t => (t.id === id ? { ...t, ...updated } : t))
+      prev.map((t) => (t.id === id ? { ...t, ...updated } : t))
     );
   };
 
   const deleteTransaction = (id: string) => {
-    setTransactions(prev => prev.filter(t => t.id !== id));
+    setTransactions(prev => prev.filter((t) => t.id !== id));
   };
 
   const toggleTheme = () => {
@@ -77,3 +75,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   );
 };
 
+export const useFinance = () => {
+  const context = useContext(FinanceContext);
+  if (!context) {
+    throw new Error('useFinance must be used within FinanceProvider');
+  }
+  return context;
+};

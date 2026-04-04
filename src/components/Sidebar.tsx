@@ -2,6 +2,7 @@ import React from 'react';
 import { useFinance } from '../context/FinanceContext';
 import { LayoutDashboard, ReceiptText, LineChart, Moon, Sun, Shield, ShieldAlert } from 'lucide-react';
 import clsx from 'clsx';
+import type { Tab } from '../types';
 
 export const Sidebar: React.FC = () => {
   const { currentRole, setRole, theme, toggleTheme, currentTab, setCurrentTab } = useFinance();
@@ -9,7 +10,7 @@ export const Sidebar: React.FC = () => {
   const navItems = [
     { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
     { id: 'transactions', label: 'Transactions', icon: ReceiptText },
-    { id: 'insights', label: 'Insights', icon: LineChart },
+    { id: 'analytics', label: 'Insights', icon: LineChart },
   ];
 
   return (
@@ -25,7 +26,7 @@ export const Sidebar: React.FC = () => {
         {navItems.map(item => (
           <button
             key={item.id}
-            onClick={() => setCurrentTab(item.id)}
+            onClick={() => setCurrentTab(item.id as Tab)}
             className={clsx('nav-link', { active: currentTab === item.id })}
             style={{ width: '100%', textAlign: 'left', background: currentTab === item.id ? 'var(--bg-color)' : 'transparent', border: 'none' }}
           >

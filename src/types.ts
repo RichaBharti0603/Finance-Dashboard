@@ -8,18 +8,33 @@ export interface Transaction {
 }
 
 export type Role = 'viewer' | 'admin';
-
 export type Theme = 'light' | 'dark';
-
-// ✅ FIXED: use 'insights' (not analytics)
 export type Tab = 'dashboard' | 'transactions' | 'insights';
+
+export interface Goal {
+  id: string;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  category?: string;
+}
+
+export interface Toast {
+  id: string;
+  message: string;
+  type: 'info' | 'error' | 'success';
+}
 
 export interface FinanceContextType {
   transactions: Transaction[];
-
   addTransaction: (t: Omit<Transaction, 'id'>) => void;
   updateTransaction: (id: string, t: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;
+  deleteTransactions: (ids: string[]) => void;
+
+  goals: Goal[];
+  addGoal: (g: Omit<Goal, 'id' | 'currentAmount'>) => void;
+  updateGoal: (id: string, g: Partial<Goal>) => void;
 
   currentRole: Role;
   setRole: (role: Role) => void;
@@ -32,4 +47,8 @@ export interface FinanceContextType {
 
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+
+  toasts: Toast[];
+  addToast: (message: string, type: Toast['type']) => void;
+  removeToast: (id: string) => void;
 }

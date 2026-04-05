@@ -2,10 +2,8 @@ import React from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Dashboard } from './pages/Dashboard';
 import { Transactions } from './pages/Transactions';
-import { FinanceProvider } from './context/FinanceContext';
+import { FinanceProvider, useFinance } from './context/FinanceContext';
 import { Insights } from './pages/Insights';
-
-import { useFinance } from './context/FinanceContext';
 
 const AppContent: React.FC = () => {
   const { currentTab } = useFinance();
@@ -16,7 +14,7 @@ const AppContent: React.FC = () => {
       <main className="main-content">
         {currentTab === 'dashboard' && <Dashboard />}
         {currentTab === 'transactions' && <Transactions />}
-        {currentTab === 'analytics' && <Insights />}
+        {currentTab === 'insights' && <Insights />}
       </main>
     </div>
   );

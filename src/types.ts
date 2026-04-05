@@ -11,10 +11,12 @@ export type Role = 'viewer' | 'admin';
 
 export type Theme = 'light' | 'dark';
 
-export type Tab = 'dashboard' | 'transactions' | 'analytics';
+// ✅ FIXED: use 'insights' (not analytics)
+export type Tab = 'dashboard' | 'transactions' | 'insights';
 
 export interface FinanceContextType {
   transactions: Transaction[];
+
   addTransaction: (t: Omit<Transaction, 'id'>) => void;
   updateTransaction: (id: string, t: Partial<Transaction>) => void;
   deleteTransaction: (id: string) => void;

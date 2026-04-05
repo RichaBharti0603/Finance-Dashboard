@@ -1,8 +1,8 @@
 import React from 'react';
 import { Activity, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
-export const HealthScore: React.FC = () => {
-  const score = 72;
+export const HealthScore: React.FC<{ score?: number }> = ({ score: propScore }) => {
+  const score = propScore ?? 72;
   const radius = 50;
   const strokeWidth = 10;
   const normalizedRadius = radius - strokeWidth * 2;

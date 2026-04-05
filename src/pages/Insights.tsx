@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useFinance } from '../context/FinanceContext';
-import { AlertCircle, ArrowDownCircle, ArrowUpCircle, Award } from 'lucide-react';
+import { AlertCircle, ArrowDownCircle, ArrowUpCircle, Award, Target, TrendingUp } from 'lucide-react';
 import { subMonths, isSameMonth, parseISO } from 'date-fns';
 
 export const Insights: React.FC = () => {
@@ -65,75 +65,84 @@ export const Insights: React.FC = () => {
 
   if (!insights) {
     return (
-      <div className="animate-in" style={{ textAlign: 'center', marginTop: '4rem' }}>
-        <AlertCircle size={48} style={{ color: 'var(--text-secondary)', margin: '0 auto 1rem' }} />
-        <h2>Not enough data for insights</h2>
-        <p>Add some transactions to generate insights.</p>
+      <div className="animate-in" style={{ textAlign: 'center', marginTop: '6rem' }}>
+        <AlertCircle size={64} style={{ color: 'var(--text-secondary)', opacity: 0.5, margin: '0 auto 1.5rem' }} />
+        <h2 style={{ fontSize: '2rem' }}>Awaiting more data...</h2>
+        <p style={{ maxWidth: '400px', margin: '0.5rem auto' }}>We need more transactions to generate meaningful financial patterns for Zorvyn.</p>
+        <button className="btn btn-primary" style={{ marginTop: '2rem' }} onClick={() => window.location.reload()}>Refresh Dashboard</button>
       </div>
     );
   }
 
   return (
     <div className="animate-in">
-      <h1 style={{ marginBottom: '2rem' }}>Financial Insights</h1>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <h1 className="tracking-tight" style={{ margin: 0 }}>Financial Intelligence</h1>
+        <p className="text-sm font-bold" style={{ color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '0.25rem' }}>Zorvyn AI Engine</p>
+      </div>
 
-      <div className="grid-cards">
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div className="grid-cards" style={{ marginBottom: '2rem' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderLeft: '6px solid var(--warning)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--warning)' }}>
-            <Award size={24} />
-            <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1rem' }}>Top Spending Category</h3>
+            <Award size={28} />
+            <span className="text-xs font-bold" style={{ color: 'var(--text-main)', letterSpacing: '0.05em' }}>PEAK EXPENDITURE</span>
           </div>
           <div>
-            <h2 style={{ margin: '0 0 0.25rem 0' }}>{insights.topCategory}</h2>
-            <p style={{ margin: 0 }}>
-              You've spent <strong>${insights.topCategoryAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> on this category.
+            <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.75rem' }}>{insights.topCategory}</h2>
+            <p style={{ margin: 0, fontWeight: 500 }}>
+              Significant concentration of <strong>₹{insights.topCategoryAmount.toLocaleString()}</strong> in this area.
             </p>
           </div>
         </div>
 
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderLeft: '6px solid ' + (insights.momChange > 0 ? 'var(--danger)' : 'var(--success)') }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: insights.momChange > 0 ? 'var(--danger)' : 'var(--success)' }}>
-            {insights.momChange > 0 ? <ArrowUpCircle size={24} /> : <ArrowDownCircle size={24} />}
-            <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1rem' }}>MoM Spending Change</h3>
+            {insights.momChange > 0 ? <ArrowUpCircle size={28} /> : <ArrowDownCircle size={28} />}
+            <span className="text-xs font-bold" style={{ color: 'var(--text-main)', letterSpacing: '0.05em' }}>MOM TREND</span>
           </div>
           <div>
-            <h2 style={{ margin: '0 0 0.25rem 0' }}>
-              {Math.abs(insights.momChange).toFixed(1)}% {insights.momChange > 0 ? 'Increase' : 'Decrease'}
+            <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.75rem' }}>
+              {Math.abs(insights.momChange).toFixed(1)}% {insights.momChange > 0 ? 'Higher' : 'Lower'}
             </h2>
-            <p style={{ margin: 0 }}>
-              Compared to last month. Total this month: ${insights.thisMonthExpense.toLocaleString()}
+            <p style={{ margin: 0, fontWeight: 500 }}>
+              Monthly spending velocity has changed compared to last month.
             </p>
           </div>
         </div>
 
-        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', borderLeft: '6px solid var(--primary)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--primary)' }}>
-            <AlertCircle size={24} />
-            <h3 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1rem' }}>Savings Rate (This Month)</h3>
+            <Target size={28} />
+            <span className="text-xs font-bold" style={{ color: 'var(--text-main)', letterSpacing: '0.05em' }}>GOAL ADHERENCE</span>
           </div>
           <div>
-            <h2 style={{ margin: '0 0 0.25rem 0' }}>{insights.savingsRate.toFixed(1)}%</h2>
-            <p style={{ margin: 0 }}>
+            <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.75rem' }}>{insights.savingsRate.toFixed(1)}% Saving</h2>
+            <p style={{ margin: 0, fontWeight: 500 }}>
               {insights.savingsRate > 20 
-                ? "Excellent! You're saving more than 20%." 
+                ? "Excellent efficiency! You're hitting your threshold." 
                 : insights.savingsRate > 0 
-                  ? "Good job! You're saving." 
-                  : "Watch out! Your expenses exceed your income this month."}
+                  ? "Steady progress. Small adjustments could double this." 
+                  : "Critical: Expenses are outpacing current liquidity."}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="glass-card">
-        <h3 style={{ marginBottom: '1rem' }}>Summary</h3>
-        <p style={{ marginBottom: '0.5rem' }}>
-          Your highest expense area overall is <strong>{insights.topCategory}</strong>. Focus on reducing spending here to improve your savings rate.
-        </p>
-        <p>
-          {insights.momChange > 0 
-            ? `Your spending has increased by ${insights.momChange.toFixed(1)}% compared to last month. Consider reviewing your recent ${insights.topCategory} transactions.` 
-            : `Great job! Your spending is down ${Math.abs(insights.momChange).toFixed(1)}% from last month.`}
-        </p>
+      <div className="grid-charts">
+        <div className="glass-card" style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+          <div style={{ padding: '2rem', background: 'var(--bg-color)', borderRadius: '24px', color: 'var(--primary)' }}>
+            <TrendingUp size={48} />
+          </div>
+          <div>
+            <h3 style={{ marginBottom: '0.75rem' }}>Analysis Summary</h3>
+            <p style={{ maxWidth: '600px', fontWeight: 500 }}>
+              The data suggests that <strong>{insights.topCategory}</strong> is the primary driver of your outward cash flow.
+              {insights.momChange > 0 
+                ? ` There has been a notable increase in spending velocity this month (+${insights.momChange.toFixed(1)}%). We recommend auditing recent transactions in ${insights.topCategory} to identify potential recurring leakages.`
+                : ` Your disciplined approach has successfully reduced spending by ${Math.abs(insights.momChange).toFixed(1)}%. This capital is now available for target-based savings.`}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

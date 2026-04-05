@@ -38,6 +38,8 @@ const Layout: React.FC = () => {
 
   return (
     <div className="app-container" data-theme={theme} data-role={currentRole} style={{ display: 'flex', width: '100%' }}>
+      <div className="bg-blob" style={{ top: '-100px', left: '10%' }} />
+      <div className="bg-blob" style={{ bottom: '-100px', right: '10%', animationDelay: '-10s' }} />
       <Sidebar />
       <main className="main-content">
         {currentTab === 'dashboard' && <Dashboard />}

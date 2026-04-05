@@ -114,9 +114,11 @@ export const Transactions: React.FC = () => {
           <button className="btn btn-outline" onClick={handleExport}>
             <Download size={18} /> Export
           </button>
-          <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
-            <Plus size={18} /> Add Entry
-          </button>
+          {currentRole === 'admin' && (
+            <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
+              <Plus size={18} /> Add Entry
+            </button>
+          )}
         </div>
       </div>
 
@@ -163,9 +165,11 @@ export const Transactions: React.FC = () => {
           <span className="font-bold">{selectedIds.length} items selected</span>
           <div style={{ display: 'flex', gap: '1rem' }}>
              <button className="btn" style={{ background: 'rgba(255,255,255,0.15)', color: 'white' }} onClick={() => setSelectedIds([])}>Cancel</button>
-             <button className="btn" style={{ background: 'var(--danger)', color: 'white' }} onClick={handleBulkDelete}>
-                <Trash2 size={16} /> Bulk Remove
-             </button>
+             {currentRole === 'admin' && (
+               <button className="btn" style={{ background: 'var(--danger)', color: 'white' }} onClick={handleBulkDelete}>
+                  <Trash2 size={16} /> Bulk Remove
+               </button>
+             )}
           </div>
         </div>
       )}
@@ -200,14 +204,14 @@ export const Transactions: React.FC = () => {
                     {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                     <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-                        <button className="btn-icon" onClick={() => startEditing(t)} disabled={currentRole === 'viewer'} title={currentRole === 'viewer' ? 'Admin only' : ''}>
+                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', opacity: currentRole === 'viewer' ? 0.4 : 1 }}>
+                        <button className="btn-icon" onClick={() => startEditing(t)} disabled={currentRole === 'viewer'}>
                            <Edit2 size={16} />
                         </button>
                         <button className="btn-icon" style={{ color: 'var(--danger)' }} onClick={() => deleteTransaction(t.id)} disabled={currentRole === 'viewer'}>
                            <Trash2 size={16} />
                         </button>
-                     </div>
+                      </div>
                   </td>
                 </tr>
               ))}

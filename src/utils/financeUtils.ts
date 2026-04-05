@@ -79,6 +79,7 @@ export const getPeriodComparison = (transactions: Transaction[]) => {
   return {
     current: currentMonthExp,
     previous: lastMonthExp,
+    diff: currentMonthExp - lastMonthExp,
     percentChange: Math.round(percentChange)
   };
 };
@@ -102,6 +103,13 @@ export const getCategoryBreakdown = (transactions: Transaction[]) => {
     if (t.type === 'expense') map[t.category] = (map[t.category] || 0) + t.amount;
   });
   return map;
+};
+
+export const getSpendingTier = (transactions: Transaction[]) => {
+  const comp = getPeriodComparison(transactions);
+  if (comp.percentChange < -10) return { label: 'OPTIMAL', color: 'var(--success)', level: 'saver' };
+  if (comp.percentChange < 15) return { label: 'BALANCED', color: 'var(--warning)', level: 'balanced' };
+  return { label: 'HIGH BURN', color: 'var(--danger)', level: 'over' };
 };
 
 export const getTopCategory = (transactions: Transaction[]) => {

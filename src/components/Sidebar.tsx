@@ -20,30 +20,31 @@ export const Sidebar: React.FC = () => {
   return (
     <div className="sidebar shadow-lg">
       {/* BRANDING */}
-      <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ marginBottom: '3rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <div style={{ 
-          width: 42, height: 42, borderRadius: '14px', 
+          width: 48, height: 48, borderRadius: '16px', 
           background: 'linear-gradient(135deg, var(--primary) 0%, #a855f7 100%)', 
           display: 'flex', alignItems: 'center', justifyContent: 'center', 
           color: 'white', boxShadow: '0 8px 16px var(--ring)' 
         }}>
-          <Zap size={22} fill="white" />
+          <Zap size={24} fill="white" />
         </div>
-        <h2 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, letterSpacing: '-0.03em' }}>
+        <h2 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 900, letterSpacing: '-0.04em' }}>
           Zorvyn
         </h2>
       </div>
 
       {/* USER PROFILE & ROLE STATUS */}
       <div style={{ 
-        marginBottom: '2rem', padding: '1rem', borderRadius: '20px', 
+        marginBottom: '2.5rem', padding: '1.25rem', borderRadius: '24px', 
         background: 'var(--bg-color)', border: '1px solid var(--border-color)',
-        display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative'
+        display: 'flex', alignItems: 'center', gap: '0.75rem'
       }}>
         <div style={{ 
           background: currentRole === 'admin' ? 'var(--primary)' : 'var(--text-secondary)',
-          width: 44, height: 44, borderRadius: '12px', display: 'flex', 
-          alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 700 
+          width: 48, height: 48, borderRadius: '14px', display: 'flex', 
+          alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800,
+          boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
         }}>
           {currentRole === 'admin' ? 'AR' : 'GS'}
         </div>
@@ -59,9 +60,9 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* NAVIGATION */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <p className="text-xs font-bold text-secondary" style={{ textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>Portfolio</p>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <p className="text-xs font-bold text-secondary" style={{ textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.1em', paddingLeft: '0.5rem' }}>Portfolio</p>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {navItems.map(item => (
             <button
               key={item.id}
@@ -69,69 +70,66 @@ export const Sidebar: React.FC = () => {
               className={clsx('nav-link', { active: currentTab === item.id })}
               style={{ border: 'none', background: 'transparent', textAlign: 'left', cursor: 'pointer' }}
             >
-              <item.icon size={18} />
-              <span className="text-sm font-bold">{item.label}</span>
-              {currentTab === item.id && <div style={{ marginLeft: 'auto', width: 6, height: 6, borderRadius: '50%', background: 'white' }} />}
+              <item.icon size={20} />
+              <span className="font-bold">{item.label}</span>
             </button>
           ))}
         </nav>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <p className="text-xs font-bold text-secondary" style={{ textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '0.05em' }}>Management</p>
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-           <button className="nav-link" style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}><CreditCard size={18} /><span className="text-sm font-bold">Banking</span></button>
-           <button className="nav-link" style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}><Settings size={18} /><span className="text-sm font-bold">Settings</span></button>
+      <div style={{ marginBottom: '2.5rem' }}>
+        <p className="text-xs font-bold text-secondary" style={{ textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '0.1em', paddingLeft: '0.5rem' }}>Tools</p>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+           <button className="nav-link" style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}><CreditCard size={20} /><span className="font-bold">Cards</span></button>
+           <button className="nav-link" style={{ border: 'none', background: 'transparent', cursor: 'pointer' }}><Settings size={20} /><span className="font-bold">Settings</span></button>
         </nav>
       </div>
 
       <div style={{ flex: 1 }}></div>
 
-      {/* LOWER FOOTER - ROLE & THEME */}
-      <div style={{ padding: '1.5rem 0', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {/* FOOTER ACTIONS */}
+      <div style={{ paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
+        {/* THEME TOGGLE (PROMINENT) */}
+        <button className="theme-switch" onClick={toggleTheme}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+             <span className="text-sm">{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+          </div>
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: theme === 'light' ? '#64748b' : '#fbbf24' }}></div>
+        </button>
+
         {/* ROLE SWITCHER */}
-        <div className="input-group">
-            <p className="text-xs font-bold text-secondary" style={{ marginBottom: '0.5rem', letterSpacing: '0.05em' }}>SESSION MODE</p>
-            <div style={{ 
-               display: 'flex', background: 'var(--bg-color)', 
-               borderRadius: '12px', padding: '0.25rem', border: '1px solid var(--border-color)' 
-            }}>
-               <button 
-                  onClick={() => setRole('admin')}
-                  style={{ 
-                     flex: 1, padding: '0.625rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, 
-                     border: 'none', cursor: 'pointer', transition: '0.2s',
-                     background: currentRole === 'admin' ? 'var(--primary)' : 'transparent',
-                     boxShadow: currentRole === 'admin' ? '0 4px 12px var(--ring)' : 'none',
-                     color: currentRole === 'admin' ? 'white' : 'var(--text-secondary)'
-                  }}
-               >
-                  Admin
-               </button>
-               <button 
-                  onClick={() => setRole('viewer')}
-                  style={{ 
-                     flex: 1, padding: '0.625rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800, 
-                     border: 'none', cursor: 'pointer', transition: '0.2s',
-                     background: currentRole === 'viewer' ? 'var(--primary)' : 'transparent',
-                     boxShadow: currentRole === 'viewer' ? '0 4px 12px var(--ring)' : 'none',
-                     color: currentRole === 'viewer' ? 'white' : 'var(--text-secondary)'
-                  }}
-               >
-                  Viewer
-               </button>
-            </div>
+        <div style={{ background: 'var(--bg-color)', borderRadius: '18px', padding: '0.25rem', border: '1px solid var(--border-color)', display: 'flex' }}>
+           <button 
+              onClick={() => setRole('admin')}
+              style={{ 
+                 flex: 1, padding: '0.75rem', borderRadius: '14px', fontSize: '0.75rem', fontWeight: 900, 
+                 border: 'none', cursor: 'pointer', transition: '0.3s',
+                 background: currentRole === 'admin' ? 'var(--primary)' : 'transparent',
+                 boxShadow: currentRole === 'admin' ? '0 4px 12px var(--ring)' : 'none',
+                 color: currentRole === 'admin' ? 'white' : 'var(--text-secondary)'
+              }}
+           >
+              Admin
+           </button>
+           <button 
+              onClick={() => setRole('viewer')}
+              style={{ 
+                 flex: 1, padding: '0.75rem', borderRadius: '14px', fontSize: '0.75rem', fontWeight: 900, 
+                 border: 'none', cursor: 'pointer', transition: '0.3s',
+                 background: currentRole === 'viewer' ? 'var(--primary)' : 'transparent',
+                 boxShadow: currentRole === 'viewer' ? '0 4px 12px var(--ring)' : 'none',
+                 color: currentRole === 'viewer' ? 'white' : 'var(--text-secondary)'
+              }}
+           >
+              Viewer
+           </button>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-             <ShieldCheck size={16} color="var(--primary)" />
-             <span className="text-xs font-bold" style={{ opacity: 0.8 }}>ZORVYN-SECURE</span>
-          </div>
-          <button className="btn-icon" onClick={toggleTheme}>
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', opacity: 0.5 }}>
+           <ShieldCheck size={14} color="var(--primary)" />
+           <span className="text-xs font-bold tracking-widest">SECURE SESSION</span>
         </div>
       </div>
     </div>
